@@ -14,29 +14,9 @@ const exec_1 = require("@actions/exec");
 const path_1 = require("path");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const project = (0, core_1.getInput)('project');
-        const build = (0, core_1.getInput)('build');
         const executable = (0, core_1.getInput)('executable');
         console.log(`##[add-matcher]${(0, path_1.join)(__dirname, '..', '.github', 'tsc.json')}`);
-        const args = [
-            `${(0, path_1.join)(process.cwd(), 'node_modules/.bin', executable)}`,
-            '--noEmit',
-            '--noErrorTruncation',
-            '--pretty',
-            'false',
-            '--incremental',
-            'false',
-        ];
-        if (project) {
-            args.push('--project', project);
-        }
-        if (build) {
-            args.splice(1, 0, '--build', build);
-            // Remove --noEmit and --noErrorTruncation, which are unsupported with --build
-            args.splice(3, 2);
-            // Change --incremental false for --incremental true, as incremental builds are required for composite builds
-            args.splice(-1, 1, 'true');
-        }
+        const args = [`${(0, path_1.join)(process.cwd(), 'node_modules/.bin', executable)}`];
         try {
             yield (0, exec_1.exec)('node', args);
         }
